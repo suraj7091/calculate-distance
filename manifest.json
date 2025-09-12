@@ -5,7 +5,7 @@
   "version": "1.0",
   "description": "A minimal Chrome extension (MV3) with popup, content script and service worker.",
   "icons": {
-    "16": "icon.jpg"
+    "16": "icon.png"
   },
   "action": {
     "default_popup": "popup.html",
