@@ -90,10 +90,9 @@ function ensureCrosshairs() {
       left: '0px',
       width: '1px',
       height: '14px',
-      background: 'rgba(0,0,0,0.5)',
+      background: 'rgba(0,0,0,0.55)',
       zIndex: '2147483647',
-      pointerEvents: 'none',
-      transform: 'translate(-50%, -50%)'
+      pointerEvents: 'none'
     });
     document.documentElement.appendChild(crosshairV);
   }
@@ -104,10 +103,9 @@ function ensureCrosshairs() {
       left: '0px',
       width: '14px',
       height: '1px',
-      background: 'rgba(0,0,0,0.5)',
+      background: 'rgba(0,0,0,0.55)',
       zIndex: '2147483647',
-      pointerEvents: 'none',
-      transform: 'translate(-50%, -50%)'
+      pointerEvents: 'none'
     });
     document.documentElement.appendChild(crosshairH);
   }
@@ -381,6 +379,25 @@ function onKeyDown(event) {
   }
 }
 
+function onGlobalKeyDown(event) {
+  const key = (event.key || '').toLowerCase();
+  const target = event.target;
+  if (target && (target.isContentEditable || (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT'))) return;
+  if (key === 'r' && !event.ctrlKey && !event.metaKey && !event.altKey) {
+    event.preventDefault();
+    if (measuringActive) {
+      // Fully restart: remove listeners/overlays, then start fresh
+      stopMeasuring();
+      startMeasuring();
+    } else {
+      startMeasuring();
+    }
+  }
+}
+
+document.addEventListener('keydown', onGlobalKeyDown, true);
+window.addEventListener('keydown', onGlobalKeyDown, true);
+
 function startMeasuring() {
   if (measuringActive) return;
   measuringActive = true;
@@ -405,8 +422,16 @@ function onMouseMove(event) {
   const target = event.target;
   updateHover(target);
   ensureCrosshairs();
-  if (crosshairV) crosshairV.style.left = event.clientX + 'px';
-  if (crosshairH) crosshairH.style.top = event.clientY + 'px';
+  const x = event.clientX;
+  const y = event.clientY;
+  if (crosshairV) {
+    crosshairV.style.left = x + 'px';
+    crosshairV.style.top = (y - 7) + 'px';
+  }
+  if (crosshairH) {
+    crosshairH.style.left = (x - 7) + 'px';
+    crosshairH.style.top = y + 'px';
+  }
 }
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
