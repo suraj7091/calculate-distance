@@ -1,7 +1,7 @@
 
 {
   "manifest_version": 3,
-  "name": "Simple Action Helper",
+  "name": "Distance Calculator",
   "version": "1.0",
   "description": "A minimal Chrome extension (MV3) with popup, content script and service worker.",
   "icons": {

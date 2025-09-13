@@ -44,10 +44,16 @@ async function toggleMeasure() {
   const resp = await sendOrInject(tab, { type: measuring ? 'MEASURE_START' : 'MEASURE_STOP' });
   if (!resp) {
     status.textContent = 'Unable to communicate with page';
+    setTimeout(() => (status.textContent = ''), 1500);
   } else if (resp.status) {
     status.textContent = resp.status;
+    // Close popup when starting measurement
+    if (measuring) {
+      setTimeout(() => window.close(), 500);
+    } else {
+      setTimeout(() => (status.textContent = ''), 1500);
+    }
   }
-  setTimeout(() => (status.textContent = ''), 1500);
 }
 
 measureBtn.addEventListener('click', toggleMeasure);
